@@ -1,0 +1,6 @@
+virtualmachines:
+  hosts:
+    vm2:
+      ansible_host: ec2-52-53-249-72.us-west-1.compute.amazonaws.com
+    vm3:
+      ansible_host: 54.67.82.153
