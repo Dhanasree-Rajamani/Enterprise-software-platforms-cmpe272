@@ -1,0 +1,33 @@
+---
+- name: Install apache webserver
+  hosts: virtualmachines
+  become: yes
+
+  tasks:
+  - name: Install the apache server
+    ansible.builtin.apt: name=apache2 state=present
+
+  - name: Check if apache server is running
+    command: systemctl status apache2
+    register: result
+
+  - name: showing results
+    debug:
+      var: result
+
+  - name: update file to add custom message
+    copy:
+      dest: /var/www/html/index.html
+      content: "<html><body>Hello from SJSU! - by Dhanasree</body></html>"
+
+  - name: update config to make apache2 listen on port 8080
+    lineinfile: dest=/etc/apache2/ports.conf regexp="^Listen 80" line="Listen 8080" state=present
+
+  - name: update config to make  apache2 virtualhost listen on port 8080
+    lineinfile: dest=/etc/apache2/sites-available/000-default.conf regexp="^<VirtualHost \*:80>" line="<VirtualHost *:8080>" state=present
+
+  - name: restart apache2 to pick change in port
+    service: name=apache2 state=restarted
+
+  - name: undeploy apache web server
+    apt: name=apache2 state=absent
