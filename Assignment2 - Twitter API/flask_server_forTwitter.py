@@ -22,9 +22,9 @@ app.secret_key = 'secret'
 def createTweet():
     tweet_text = request.args.get('tweet_text')
     response = oauth.post(
-    "https://api.twitter.com/2/tweets",
-    json=json.loads(tweet_text),
-)
+        "https://api.twitter.com/2/tweets",
+        json={"text": f"{tweet_text}"},
+    )
     return str(response.status_code)
 
 @app.route('/searchTweet', methods=['GET'])
